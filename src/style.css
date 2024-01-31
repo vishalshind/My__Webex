@@ -1,0 +1,445 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  background: linear-gradient(to bottom, rgb(17, 16, 16) 2cm, #ffffff 2cm); /* Red background for the top 2cm */
+}
+
+/* Other styles for your elements can be added below */
+
+
+
+.room-button.hovered {
+  color: darkred; /* Change text color on hover */
+}
+
+.room-container.highlighted {
+  background-color: #ff0000; /* Change to your desired background color */
+}
+
+.message-container.highlighted {
+  background-color: #ff0000; /* Change to your desired background color */
+}
+
+#send-button,
+    #call-button {
+      margin-top: 10px;
+      /* Remove align-self: flex-end; */
+    }
+    .room-container {
+  /* Normal state styles */color: magenta;
+  /* ... */
+}
+    .room-container.highlighted {
+  background-color: #ff0000; /* Change to your desired background color */
+}
+
+/* Add this CSS for the dark gray top bar */
+#top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2cm;
+  background-color: #bf3333; /* Dark gray background */
+  z-index: 2;
+}
+::-webkit-scrollbar {
+  width: 12px;
+}
+#message-input {
+  margin-top: 10px;
+  padding: 10px;
+  width: 32cm; /* Updated width to 25cm */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #ccc; /* Gray background color for the input field */
+  color: black; /* Text color for the input field */
+height: 0.6cm;
+left: 5cm;
+}
+
+#send-button {
+  margin-top: 10px;
+  padding: 15px;
+  color: black; /* Text color for the send button */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 4cm; /* Updated width to 3.5cm */
+  background-color: #ccc; /* Gray background color for the send button */
+height: 1.2cm;}
+
+/* Move the input field and send button outside the chat container */
+#message-input,
+#send-button {
+  position: fixed;
+  bottom: 32px; /* 40px from upper margin */
+  left: 9.2cm; /* 8cm from left margin for input field */
+}
+
+#send-button {
+  left: 42cm; /* Adjusted to accommodate the width of the input field */
+}
+
+
+::-webkit-scrollbar-thumb {
+  background-color: #908888;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+.room-button {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #eff3f6 !important; /* Light blue background color */
+  color: #010306; /* Darker blue text color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  text-align: left;
+  transition: background-color 0.3s; /* Smooth background color transition */
+}
+.chat-date {
+    width: 6cm;
+  }
+
+.room-button:hover {
+  background-color: #f2f5f7 !important;
+}
+
+
+.room-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* Set gap to 0 */
+  color: #ebf0f5;
+}
+
+
+.left-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  width: 6cm;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  margin-top: 2cm; /* Set top margin to 2cm */
+}
+
+
+.room-button {
+  color: rgb(0, 0, 5);
+  background-color: #bec4cd;
+}
+
+#createroom {
+  background-color: #2ecc71;
+  position: fixed;
+  top: 0.3cm; /* Updated to 0cm from top */
+  left: 4.5cm; /* Updated to 3cm from left */
+  width: 1.4cm;
+  height: 1.4cm;
+  border-radius: 1cm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(75, 44, 44);
+  font-weight: bold;
+  text-decoration: none;
+  z-index: 3; /* Ensure it's above the dark gray top bar */
+}
+
+
+#message-input {
+  margin-top: 10px;
+  padding: 10px;
+  width: calc(100% - 20px);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#message-input::placeholder {
+  color: black; /* Placeholder text color */
+}
+.button-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: #080808;
+  box-shadow: 0 4px 8px rgba(227, 132, 132, 0.1);
+  border-radius: 8px;
+  margin: 5px;
+  cursor: pointer;
+  height: 1.5cm;
+  position: fixed;
+  top: 0.3cm;
+  left: 1cm; /* Adjust left position */
+  z-index: 3; /* Ensure it's above the dark gray top bar */
+  }
+
+  p.profile-info {
+  color: #fcf7f7;
+  font-size: 16px;
+  font-weight: bold; /* Set font-weight to bold */
+  margin: 0;
+}
+
+
+
+#logout {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 9999; /* Ensure it's above other elements */
+}
+
+.room {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    transition: background-color 0.3s;
+}
+
+.delete-icon {
+    margin-left: auto;
+    cursor: pointer;
+color: darkred;
+  }
+
+.room:hover {
+    background-color: #744343; /* Change the background color as desired */
+}
+
+button {
+  padding: 15px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 200px;
+  font-weight: bold;
+}.left-container {
+  overflow-x: hidden; /* Hide the horizontal scrollbar */
+}
+
+.right-container {
+  flex: 1;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 20px;
+  overflow-y: auto;
+  color: #333;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2cm;
+  left: 8cm;
+  right: 6cm;
+  bottom: 5cm;
+  z-index: 1; /* Ensure it's above the dark gray top bar and modal */
+}
+.chat-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 50px;
+  left: 6cm;
+  background-color: #ffffff;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 22cm;
+  width: calc(100% - 0cm);
+}
+
+.chat-message {
+  margin-bottom: 10px;
+  position: relative;
+}
+.room-container {
+  display: flex;
+  align-items: center;  
+}
+
+.room-button {
+  margin-right: 0.3cm;
+}
+/* Style for delete icons */
+.delete-icon {
+  color: transparent; /* Hide the icon by default */
+  cursor: pointer;
+  transition: color 0.3s ease; /* Add a smooth transition for the color change */
+}
+.message-container {
+  position: relative;
+  margin-bottom: 0.5cm; /* Adjust the gap between messages as needed */
+}
+
+.delete-message-icon {
+  visibility: hidden;
+  color: darkred;
+  position: absolute;
+  right: 4cm; /* Position the delete icon to the right of the message container */
+  cursor: pointer;
+
+}
+.delete-icon.delete-room-icon {
+  color: darkred; /* Change the color to dark red */
+}
+
+.message-container:hover .delete-message-icon {
+  visibility: visible;
+}
+
+.chat-message:last-child {
+  padding-bottom: 0;
+}
+
+.time {
+  position: absolute;
+  bottom: 0.7cm;
+  right: 33.1cm;
+  color: #313030;
+  font-size: 12px;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #e4ebf0;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #0f0e0e;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#send-button,
+#call-button {
+  margin-top: 10px;
+  align-self: flex-end;
+}
+
+.add-person-container {
+  position: absolute;
+  top: 2cm;
+  right: 11cm;
+}
+
+#add-person-button {
+  padding: 10px;
+  background-color: #075192;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 8cm; /* Adjusted to the width of the left container */
+  top: 2cm;
+  width: calc(100% - 8cm); /* Adjusted to the width of the left container */
+  height: calc(100% - 2cm);
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 3cm 0 0 0; /* Adjusted to shift the modal down from the top */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 20cm;
+  height: 10cm;
+  max-width: 100%;
+}
+.delete-icon {
+  visibility: hidden; /* Hide the delete icon by default */
+  color: darkred; /* Set the color to dark red */
+}
+
+.delete-icon:hover {
+  visibility: visible; /* Make the delete icon visible on hover */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Additional styles for the modal form */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+#searchInput::placeholder {
+  color: black;
+}
+#button-container {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .filter-button {
+      flex: 1;
+      max-width: 1.6cm;
+      font-weight: normal;
+      font-size: smaller;
+      white-space: nowrap;
+    } #spacesButton {
+      max-width: 1.9cm; /* Adjusted length for the Spaces button */
+    }
+#searchInput {
+  position: absolute;
+  left: 12cm;
+  background-color: #f2f4f7;
+  top: 0.3cm;
+  padding: 10px;
+  width: 200px;
+  z-index: 1; /* Ensure it's above the dark gray top bar */
+width: 15cm;
+color: #000406;
+}

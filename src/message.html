@@ -1,0 +1,1566 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@3.2.0/dist/emoji-picker-element.css">
+  <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@3.2.0/dist/emoji-picker-element.esm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mysql@2.18.1/dist/mysql.js"></script>
+ <style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  background: linear-gradient(to bottom, rgb(17, 16, 16) 2cm, #ffffff 2cm); /* Red background for the top 2cm */
+}
+
+/* Other styles for your elements can be added below */
+
+
+
+.room-button.hovered {
+  color: darkred; /* Change text color on hover */
+}
+
+.room-container.highlighted {
+  background-color: #ff0000; /* Change to your desired background color */
+}
+
+.message-container.highlighted {
+  background-color: #ff0000; /* Change to your desired background color */
+}
+
+#send-button,
+    #call-button {
+      margin-top: 10px;
+      /* Remove align-self: flex-end; */
+    }
+    .room-container {
+  /* Normal state styles */color: magenta;
+  /* ... */
+}
+    .room-container.highlighted {
+  background-color: #ff0000; /* Change to your desired background color */
+}
+
+/* Add this CSS for the dark gray top bar */
+#top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2cm;
+  background-color: #bf3333; /* Dark gray background */
+  z-index: 2;
+}
+::-webkit-scrollbar {
+  width: 12px;
+}
+#message-input {
+  margin-top: 10px;
+  padding: 10px;
+  width: 38cm; /* Updated width to 25cm */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #ccc; /* Gray background color for the input field */
+  color: black; /* Text color for the input field */
+height: 0.6cm;
+left: 5cm;
+}
+
+#send-button {
+  margin-top: 10px;
+  padding: 15px;
+  color: black; /* Text color for the send button */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 4cm; /* Updated width to 3.5cm */
+  background-color: #ccc; /* Gray background color for the send button */
+height: 1.2cm;}
+
+/* Move the input field and send button outside the chat container */
+#message-input,
+#send-button {
+  position: fixed;
+  bottom: 32px; /* 40px from upper margin */
+  left: 9.2cm; /* 8cm from left margin for input field */
+}
+
+#send-button {
+  left: 47cm; /* Adjusted to accommodate the width of the input field */
+}
+
+
+::-webkit-scrollbar-thumb {
+  background-color: #908888;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+.room-button {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #eff3f6 !important; /* Light blue background color */
+  color: #010306; /* Darker blue text color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  text-align: left;
+  transition: background-color 0.3s; /* Smooth background color transition */
+}
+.chat-date {
+    width: 6cm;
+  }
+
+.room-button:hover {
+  background-color: #f2f5f7 !important;
+}
+
+
+.room-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* Set gap to 0 */
+  color: #ebf0f5;
+}
+
+
+.left-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  width: 6cm;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  margin-top: 2cm; /* Set top margin to 2cm */
+}
+
+
+.room-button {
+  color: rgb(0, 0, 5);
+  background-color: #bec4cd;
+}
+
+#createroom {
+  background-color: #2ecc71;
+  position: fixed;
+  top: 0.3cm; /* Updated to 0cm from top */
+  left: 4.5cm; /* Updated to 3cm from left */
+  width: 1.4cm;
+  height: 1.4cm;
+  border-radius: 1cm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(75, 44, 44);
+  font-weight: bold;
+  text-decoration: none;
+  z-index: 3; /* Ensure it's above the dark gray top bar */
+}
+
+
+#message-input {
+  margin-top: 10px;
+  padding: 10px;
+  width: calc(100% - 20px);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#message-input::placeholder {
+  color: black; /* Placeholder text color */
+}
+.button-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: #080808;
+  box-shadow: 0 4px 8px rgba(227, 132, 132, 0.1);
+  border-radius: 8px;
+  margin: 5px;
+  cursor: pointer;
+  height: 1.5cm;
+  position: fixed;
+  top: 0.3cm;
+  left: 1cm; /* Adjust left position */
+  z-index: 3; /* Ensure it's above the dark gray top bar */
+  }
+
+  p.profile-info {
+  color: #fcf7f7;
+  font-size: 16px;
+  font-weight: bold; /* Set font-weight to bold */
+  margin: 0;
+}
+
+
+
+#logout {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 9999; /* Ensure it's above other elements */
+  margin-top: 0.37cm;
+  height: 1.1cm; /* Updated height */
+}
+
+
+.room {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    transition: background-color 0.3s;
+}
+
+.delete-icon {
+    margin-left: auto;
+    cursor: pointer;
+color: darkred;
+  }
+
+.room:hover {
+    background-color: #744343; /* Change the background color as desired */
+}
+
+button {
+  padding: 15px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 200px;
+  font-weight: bold;
+}.left-container {
+  overflow-x: hidden; /* Hide the horizontal scrollbar */
+}
+
+.right-container {
+  flex: 1;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 20px;
+  overflow-y: auto;
+  color: #333;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2cm;
+  left: 8cm;
+  right: 0cm;
+  bottom: 5cm;
+  z-index: 1; /* Ensure it's above the dark gray top bar and modal */
+}
+.chat-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 50px;
+  left: 6cm;
+  background-color: #ffffff;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 22cm;
+  width: calc(100% - 0cm);
+}
+
+.chat-message {
+  margin-bottom: 10px;
+  position: relative;
+}
+.room-container {
+  display: flex;
+  align-items: center;  
+}
+
+.room-button {
+  margin-right: 0.3cm;
+}
+/* Style for delete icons */
+.delete-icon {
+  color: transparent; /* Hide the icon by default */
+  cursor: pointer;
+  transition: color 0.3s ease; /* Add a smooth transition for the color change */
+}
+.message-container {
+  position: relative;
+  margin-bottom: 0.5cm; /* Adjust the gap between messages as needed */
+}
+
+.delete-message-icon {
+  visibility: hidden;
+  color: darkred;
+  position: absolute;
+  right: 4cm; /* Position the delete icon to the right of the message container */
+  cursor: pointer;
+
+}
+.delete-icon.delete-room-icon {
+  color: darkred; /* Change the color to dark red */
+}
+
+.message-container:hover .delete-message-icon {
+  visibility: visible;
+}
+
+.chat-message:last-child {
+  padding-bottom: 0;
+}
+
+.time {
+  position: absolute;
+  bottom: 0.7cm;
+  right: 39.2cm;
+  color: #313030;
+  font-size: 12px;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #e4ebf0;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #0f0e0e;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#send-button,
+#call-button {
+  margin-top: 10px;
+  align-self: flex-end;
+}
+
+.add-person-container {
+  position: absolute;
+  top: 2cm;
+  right: 11cm;
+}
+
+#add-person-button {
+  padding: 10px;
+  background-color: #075192;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 8cm; /* Adjusted to the width of the left container */
+  top: 2cm;
+  width: calc(100% - 8cm); /* Adjusted to the width of the left container */
+  height: calc(100% - 2cm);
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 3cm 0 0 0; /* Adjusted to shift the modal down from the top */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 20cm;
+  height: 10cm;
+  max-width: 100%;
+}
+.delete-icon {
+  visibility: hidden; /* Hide the delete icon by default */
+  color: darkred; /* Set the color to dark red */
+}
+
+.delete-icon:hover {
+  visibility: visible; /* Make the delete icon visible on hover */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Additional styles for the modal form */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+#searchInput::placeholder {
+  color: black;
+}
+#button-container {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .filter-button {
+      flex: 1;
+      max-width: 1.6cm;
+      font-weight: normal;
+      font-size: smaller;
+      white-space: nowrap;
+    } #spacesButton {
+      max-width: 1.9cm; /* Adjusted length for the Spaces button */
+    }
+#searchInput {
+  position: absolute;
+  left: 12cm;
+  background-color: #f2f4f7;
+  top: 0.3cm;
+  padding: 10px;
+  width: 200px;
+  z-index: 1; /* Ensure it's above the dark gray top bar */
+width: 15cm;
+color: #000406;
+}
+
+  </style>
+  <title>Message app example</title>
+</head>
+
+<body>
+
+  <button id="createroom" onclick="openModal()"> + </button>
+
+  <button id="logout" onclick="logout()">Logout</button>
+  
+  <div class="left-container">
+    <div id="profile-container" class="profile-container" onclick="showProfile()">
+      <img id="profile-image" class="profile-image" src="" alt="" style="background-color: black;">
+      <p id="profile-info" class="profile-info"></p>
+    </div>
+
+    <div id="button-container">
+      <button id="allButton" class="filter-button">All</button>
+      <button id="directButton" class="filter-button">Direct</button>
+      <button id="spacesButton" class="filter-button">Spaces</button>
+    </div>
+
+    <div id="room-list-container">
+      <!-- Other content goes here -->
+    </div>
+  </div>
+
+  <div class="right-container" id="chat-container">
+    <!-- Other content goes here -->
+  </div>
+
+  <div class="modal" id="createRoomModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p>Create a new room:</p>
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-form">
+        <input type="text" id="new-room-title" placeholder="Enter room title">
+        <textarea id="add-person-email-modal" placeholder="Enter email addresses (separated by commas)"></textarea>
+        <button onclick="confirmCreateRoom()">Create</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/mysqljs/mysql"></script>
+  <script src="https://unpkg.com/webex/umd/webex.min.js"></script>  
+  <script crossorigin src="https://unpkg.com/webex/umd/webex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mysql@2.18.1/dist/mysql.js"></script>
+  <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+  <script type="text/javascript">
+  var mysql = require('mysql');
+   var personalAccessToken = "OTFmMTY0ZjItZjVlOS00ZmY4LWIwNGEtYmQ2N2RiZmY5OTcwOTQ0MzFiMWItNGYz_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f";
+    var webex = (window.webex = window.Webex.init({
+      credentials: {
+        access_token: personalAccessToken
+      }
+    }));
+    
+    var newRoomId; 
+    var profileContainer = document.getElementById("profile-container");
+    var profileImage = document.getElementById("profile-image");
+    var profileInfo = document.getElementById("profile-info");
+    var chatContainer = document.getElementById("chat-container");
+    var roomListContainer = document.getElementById("room-list-container");
+
+    var newMessageNotification = document.createElement("div");
+    newMessageNotification.className = "new-message-notification";
+    newMessageNotification.innerText = ".";
+    newMessageNotification.onclick = function () {
+      listMessages(newRoomId);
+      newMessageNotification.style.display = "none";
+    };
+    document.body.appendChild(newMessageNotification);
+
+    webex.once('ready', function () {
+  if (webex.canAuthorize) {
+    showProfile();
+    listRooms();
+    // Initialize WebSocket for the first room in the list
+    const firstRoom = document.querySelector('.room-button');
+    if (firstRoom) {
+      const firstRoomId = firstRoom.getAttribute('data-room-id');
+      startListen(firstRoomId);
+    }
+  }
+});
+function createRoomWithPersons(roomName, emailAddresses) {
+  // Step 1: Create a room
+  fetch('https://webexapis.com/v1/rooms', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + personalAccessToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title: roomName,
+    }),
+  })
+  .then(response => response.json())
+  .then(roomData => {
+    // Room created, now add participants
+    const roomId = roomData.id;
+
+    // Step 2: Add participants to the room
+    const addParticipantsPromises = emailAddresses.map(email => {
+      return fetch('https://webexapis.com/v1/memberships', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + personalAccessToken,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          roomId: roomId,
+          personEmail: email,
+        }),
+      })
+      .then(response => response.json())
+      .then(participantData => {
+        console.log("Participant added:", participantData);
+      })
+      .catch(error => {
+        console.error("Error adding participant:", error);
+      });
+    });
+
+    // Wait for all participant addition promises to resolve
+    Promise.all(addParticipantsPromises)
+      .then(() => {
+        console.log("Room created with participants:", emailAddresses);
+      })
+      .catch(error => {
+        console.error("Error adding participants:", error);
+      });
+  })
+  .catch(error => {
+    console.error("Error creating room:", error);
+  });
+   listRooms() ;}
+
+
+ async function formatMessage(message) {
+      const senderName = await getSenderName(message.personId);b
+      const formattedDate = formatDate(new Date(message.created));
+      const formattedTime = formatTime(new Date(message.created));
+      const messageText = `${senderName}: ${message.text} <span class="time">${formattedTime}</span>`;
+      return `<p class="chat-message">${messageText}</p>`;
+    }
+
+    // Event listener for the "g" key press
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'g') {
+        load();
+      }
+    });
+
+function startlisten() {
+  const webSocket = webex.internal.device.services.get('web-socket');
+  
+  webSocket.connect();
+
+  webSocket.on('messages:created', (event) => {
+    const { data } = event;
+    const { roomId } = data;
+
+    if (roomId === newRoomId) {
+      listMessages(newRoomId);
+    }
+  });
+
+  webSocket.on('connection:online', () => {
+    console.log('WebSocket connection is online.');
+  });
+
+  webSocket.on('connection:offline', () => {
+    console.warn('WebSocket connection is offline. Attempting to reconnect...');
+    webSocket.connect(); // Reconnect if offline
+  });
+}
+
+function pollForNewMessages() {
+  const webSocket = webex.internal.device.services.get('web-socket');
+  webSocket.connect();
+}
+
+function listRooms() {
+  webex.rooms
+    .list({ max: 80 })
+    .then(function (rooms) {
+      const sortedRooms = rooms.items.sort((a, b) => new Date(b.lastActivity) - new Date(a.lastActivity));
+      const roomListContainer = document.getElementById("room-list-container");
+
+      const directButton = createFilterButton("", "", "white", "white");
+const spacesButton = createFilterButton("", "", "white", "white");
+const allButton = createFilterButton("", "", "white", "white")
+      // Add buttons to button container
+      const buttonContainer = document.createElement("div");
+buttonContainer.id = "button-container";
+
+
+// Append the button container to the document body or another desired location
+document.body.appendChild(buttonContainer);
+
+// Add event listeners
+document.getElementById('directButton').addEventListener('click', function () {
+  filterRoomsByType('direct');
+});
+
+document.getElementById('spacesButton').addEventListener('click', function () {
+  filterRoomsByType('spaces');
+});
+
+document.getElementById('allButton').addEventListener('click', function () {
+  filterRoomsByType('all');
+});
+
+// Call the function with 'all' type to apply the default filter
+filterRoomsByType('all');
+
+function createFilterButton(id, text) {
+  const button = document.createElement("button");
+  button.id = `${id}Button`;
+  button.className = "filter-button";
+  button.innerText = text;
+ 
+  return button;
+}
+
+      function filterRoomsByType(type) {
+  const filteredRooms = sortedRooms.filter(room => {
+    if (room.title === "Workforce CollaBot") {
+      return false; // Exclude the room with the name "Workforce CollaBot"
+    }
+
+    if (type === 'direct') {
+      return room.title.split(' ').length > 1;
+    } else if (type === 'spaces') {
+      return room.title.split(' ').length === 1;
+    } else {
+      return true;
+    }
+  });
+
+  renderRooms(filteredRooms);
+}
+
+      function renderRooms(rooms) {
+        roomListContainer.innerHTML = "";
+
+        if (rooms.length > 0) {
+          rooms.forEach(room => {
+            const roomButton = document.createElement("button");
+            roomButton.className = "room-button";
+            roomButton.innerText = room.title;
+
+            const deleteIcon = document.createElement("span");
+            deleteIcon.className = "delete-icon delete-room-icon";
+            deleteIcon.innerHTML = "🗑️";
+            deleteIcon.onclick = function (event) {
+              event.stopPropagation();
+              deleteRoom(room.id);
+            };
+
+            const roomContainer = document.createElement("div");
+            roomContainer.className = "room-container";
+            roomContainer.setAttribute('data-room-id', room.id);
+            roomContainer.appendChild(roomButton);
+            roomContainer.appendChild(deleteIcon);
+
+            roomContainer.addEventListener("mouseover", function () {
+              deleteIcon.style.visibility = "visible";
+              roomButton.classList.add("hovered");
+              roomButton.style.background = "linear-gradient(to right, LightSkyBlue 5.3cm, transparent 5cm)";
+              roomButton.style.color = "black";
+            });
+
+            roomContainer.addEventListener("mouseout", function () {
+              deleteIcon.style.visibility = "hidden";
+              roomButton.classList.remove("hovered");
+              roomButton.style.background = "";
+            });
+
+            roomButton.onclick = function () {
+              listMessages(room.id);
+            };
+
+            roomListContainer.appendChild(roomContainer);
+          });
+
+          existingRoomIds.forEach(existingRoomId => {
+            if (!rooms.some(room => room.id === existingRoomId)) {
+              const deletedRoomContainer = document.querySelector(`[data-room-id="${existingRoomId}"]`);
+              if (deletedRoomContainer) {
+                deletedRoomContainer.remove();
+              }
+            }
+          });
+        } else {
+          roomListContainer.innerHTML = "No rooms available.";
+        }
+      }
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+
+
+// Include other functions used by listRooms here...
+
+
+let newRoomName;
+function createRoom() {
+      const roomCreationBlock = document.createElement("div");
+      roomCreationBlock.innerHTML = `
+        <p>Create a new room:</p>
+        <input type="text" id="new-room-title" placeholder="Enter room title">
+        <button onclick="confirmCreateRoom()">Create</button>
+      `;
+      chatContainer.appendChild(roomCreationBlock);
+    }
+
+    function openModal() {
+  const createRoomModal = document.getElementById('createRoomModal');
+  createRoomModal.style.display = 'block';
+}
+function confirmCreateRoom() {
+  const newRoomName = document.getElementById("new-room-title").value;
+
+  if (newRoomName.trim() !== "") {
+    const emailInput = document.getElementById("add-person-email-modal");
+    const emailAddressesInputValue = emailInput.value;
+    
+    if (emailAddressesInputValue.trim() !== "") {
+      const emailAddresses = emailAddressesInputValue.split(',').map(email => email.trim());
+
+      if (emailAddresses.length > 0) {
+        createRoomWithPersons(newRoomName, emailAddresses);
+      } else {
+        console.log("Please enter valid email addresses.");
+      }
+    } else {
+      console.log("Please enter at least one email address.");
+    }
+  } else {
+    console.log("Please enter a valid room title.");
+  }
+
+  closeModal();listRooms();event.stopPropagation();
+}
+
+function closeModal() {
+  const createRoomModal = document.getElementById('createRoomModal');
+  createRoomModal.style.display = 'none';
+}
+webex.internal.device.services.get('web-socket').connect();
+
+// Listen for new messages using WebSocket
+webex.internal.device.webSocket.on('messages:created', (event) => {
+  const { data } = event;
+  const { roomId } = data;
+
+  // Check if the new message is in the currently selected room
+  if (roomId === newRoomId) {
+    // Fetch and display updated messages
+    listMessages(newRoomId);
+  }
+});
+sortedRooms.forEach(room => {
+  const roomButton = document.createElement("button");
+  const deleteIcon = document.createElement("span");
+  const roomContainer = document.createElement("div");
+  roomContainer.className = "room-container";
+  roomContainer.setAttribute('data-room-id', room.id);
+  roomContainer.appendChild(roomButton);
+  roomContainer.appendChild(deleteIcon);
+
+  roomListContainer.appendChild(roomContainer);
+});
+
+document.getElementById('searchInput').addEventListener('input', async function () {
+  const selectedRoomTitle = this.value; // 'this' refers to the input element
+  const selectedRoomId = await findRoomIdByTitle(selectedRoomTitle);
+
+  if (selectedRoomId) {
+    // Open and display messages for the selected room
+    await listMessages(selectedRoomId);
+  }
+});
+
+async function findRoomIdByTitle(title) {
+  try {
+    const rooms = await webex.rooms.list({ max: 10, title: title });
+    const selectedRoom = rooms.items.find(room => room.title === title);
+    return selectedRoom ? selectedRoom.id : null;
+  } catch (error) {
+    console.error("Error finding room ID by title:", error);
+    return null;
+  }
+}
+deleteIcon.addEventListener("mouseover", function () {
+  roomContainer.classList.add("highlighted");
+});
+
+deleteIcon.addEventListener("mouseout", function () {
+  roomContainer.classList.remove("highlighted");
+});
+document.getElementById('searchInput').addEventListener('input', async function () {
+  const selectedRoomTitle = this.value;
+  const selectedRoomId = await findRoomIdByTitle(selectedRoomTitle);
+
+  if (selectedRoomId) {
+    // Open and display messages for the selected room
+    await listMessages(selectedRoomId);
+  }
+});
+
+
+function logout() {
+      webex.logout();
+      profileContainer.style.display = "none";
+      profileImage.src = "";
+      profileInfo.textContent = "";
+      console.log("Logged out successfully.");
+    }
+
+    function showProfile() {
+  webex.people.get('me')
+    .then(user => {
+      const displayName = user.displayName || 'N/A';
+      const avatar = user.avatar;
+
+      // Update the profile image and info
+      profileImage.src = avatar;
+      profileInfo.innerHTML = `Welcome<br>${displayName} `; // Use <br> for a line break
+
+      // Add click event listener to show detailed info
+      profileInfo.addEventListener('click', () => {
+        showDetailedProfileInfo(user);
+      });
+    })
+    .catch(error => {
+      console.error("Error fetching user info:", error);
+    });
+}
+
+function showDetailedProfileInfo(user) {
+  const displayName = user.displayName || 'N/A';
+  const email = user.emails && user.emails.length > 0 ? user.emails[0] : 'N/A';
+  const department = user.department || 'N/A';
+  const mobileNo = user.phoneNumbers && user.phoneNumbers.length > 0 ? user.phoneNumbers[0] : 'N/A';
+
+  const profileContainer = document.createElement('div');
+  profileContainer.id = 'profileContainer';
+
+  profileContainer.innerHTML = `
+  <div style="background-color: #3498db; width: 14cm; height: 10cm; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 15px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); color: #fff; text-align: center; padding: 20px; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+
+<div style="font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #fff;">Name: ${displayName}</div>
+
+<div style="font-size: 16px; margin-bottom: 8px;">Email id: ${email}</div>
+
+<div style="font-size: 16px; margin-bottom: 8px;">Department: ${department}</div>
+
+<div style="font-size: 16px; margin-bottom: 8px;">Mobile No: ${mobileNo}</div>
+
+</div>
+
+  `;
+
+  // Append the profile container to the body
+  document.body.appendChild(profileContainer);
+}
+
+
+    var currentRoomId; // Variable to store the ID of the currently opened room
+var refreshIntervalId;
+async function sendMessageInRoom(messageText) {
+  try {
+    // Ensure there is a current room
+    if (!currentRoomId) {
+      console.error("No current room selected");
+      return;
+    }
+
+    // Use the Webex API to send a message
+    const sentMessage = await webex.messages.create({
+      roomId: currentRoomId,
+      text: messageText,
+    });
+
+    // Append the sent message to the chat container
+    appendMessageToChat(sentMessage);
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+}
+
+// Function to append a message to the chat container
+function appendMessageToChat(message) {
+  const chatContainer = document.getElementById("chat-container");
+
+  // Your existing code for formatting the message
+  const senderName = "You"; // Replace with the actual sender name
+  const messageDate = new Date(message.created);
+  const formattedDate = formatDate(messageDate);
+  const formattedTime = formatTime(messageDate);
+  const formattedMessage = `${senderName}: ${message.text} <span class="time">${formattedTime}</span>`;
+
+  // Create a container for the new message
+  const messageContainer = document.createElement("div");
+  messageContainer.className = "message-container";
+  messageContainer.setAttribute("data-message-id", message.id);
+
+  // Your existing code for adding the delete icon, hover effects, etc.
+
+  // Add message text to the container
+  messageContainer.innerHTML = `<p class="chat-message">${formattedMessage}</p>`;
+
+  // Append the container to the chat container
+  chatContainer.appendChild(messageContainer);
+
+  // Scroll to the bottom of the chat container to show the latest messages
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+async function getRoomDetails(roomId, webex) {
+  try {
+    const room = await webex.rooms.get(roomId);
+    const members = await webex.memberships.list({ roomId: roomId });
+    const memberEmails = members.items
+      .map(member => member.personEmail)
+      .filter(email => email !== 'visshind@cisco.com');
+
+    const roomName = room.title;
+
+    // Fetch additional details for the first member in the room (assuming there is at least one member)
+    const firstMemberId = members.items[0].personId;
+    const userDetails = await webex.people.get(firstMemberId);
+
+    // Log customAttributes to the console
+    console.log('Custom Attributes:', userDetails.customAttributes);
+
+    // Check if the element with id "customAttributes" exists before updating
+    const customAttributesElement = document.getElementById('customAttributes');
+    if (customAttributesElement) {
+      // Update the UI with the custom attributes
+      customAttributesElement.textContent = JSON.stringify(userDetails.customAttributes);
+    } else {
+      console.error('Element with id "customAttributes" not found.');
+    }
+
+    const department = userDetails.customAttributes?.department || 'N/A';
+    const managerName = userDetails.customAttributes?.ManagerName || 'N/A';
+    const jobTitle = userDetails.customAttributes?.JobTitle || 'N/A';
+    const mobileNumber = userDetails.phoneNumbers?.find(number => number.type === 'mobile')?.value || 'N/A';
+
+    return {
+      roomId: roomId,
+      roomName: roomName,
+      memberEmails: memberEmails,
+      department: department,
+      managerName: managerName,
+      jobTitle: jobTitle,
+      mobileNumber: mobileNumber,
+    };
+  } catch (error) {
+    console.error('Error fetching room details:', error);
+    throw error;
+  }
+}
+
+function showRoomDetailsInContainer(roomDetails) {
+  // Create a container div
+  const detailsContainer = document.createElement("div");
+  detailsContainer.className = "room-details-container";
+  detailsContainer.style.position = "absolute";
+  detailsContainer.style.top = "0";
+  detailsContainer.style.left = "0";
+  detailsContainer.style.width = "100%";
+  detailsContainer.style.height = "100%";
+  detailsContainer.style.backgroundColor = "#fff";
+  detailsContainer.style.zIndex = "1000";
+
+  // Set the content of the container
+  detailsContainer.innerHTML = `
+  <div style="width: 100%; height: 100%; background: linear-gradient(to right, #B2FEFA, #0ED2F7); margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #000; text-align: center; padding: 20px; position: relative;">
+    <button style="position: absolute; top: 10px; right: 10px; background-color: #f44336; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;" onclick="this.parentNode.parentNode.style.display='none'">X</button>
+    <p style="font-size: 1.5em;"><strong style="color: #000;">Name:</strong> ${roomDetails.roomName}</p>
+    <p style="font-size: 1.5em;"><strong style="color: #000;">Mail id:</strong> ${roomDetails.memberEmails.join(', ')}</p>
+    <p style="font-size: 1.5em;"><strong style="color: #000;">Department:</strong> 123652409</p>
+    <p style="font-size: 1.5em;"><strong style="color: #000;">Mobile Number:</strong> ${roomDetails.mobileNumber}</p>
+  </div>
+`;
+  
+  // Get the chat container element
+  const chatContainer = document.getElementById("chat-container");
+
+  // Append the details container to the chat container
+  chatContainer.appendChild(detailsContainer);
+}
+// Function to show room details
+async function showRoomDetails(roomId, webex) {
+  try {
+    const roomDetails = await getRoomDetails(roomId, webex);
+    if (roomDetails) {
+      showRoomDetailsInContainer(roomDetails);
+    } else {
+      console.error("Failed to fetch room details");
+    }
+  } catch (error) {
+    console.error("Error fetching room details:", error);
+  }
+}
+
+// Add the above CSS block
+const style = document.createElement("style");
+style.innerHTML = `
+  .room-details-container {
+    width: 10cm !important;
+    min-height: 6cm !important;
+    padding: 20px !important;
+    background-color: #fff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+`;
+
+document.head.appendChild(style);
+
+
+
+
+const connection = mysql.createConnection({
+  host: 'localhost:8080',
+  port: 8080,
+  user: 'root',
+  password: '', // replace with your MySQL password
+  database: 'webex1'
+});
+
+// Promisify the query method to handle asynchronous operations
+const queryAsync = util.promisify(connection.query).bind(connection);
+
+connection.connect(err => {
+  if (err) {
+    console.error('Error connecting to MySQL:', err);
+    return;
+  }
+  console.log('Connected to MySQL');
+});
+
+async function listMessages(roomId) {
+  if (roomId !== currentRoomId) {
+    clearInterval(refreshIntervalId);
+    currentRoomId = roomId;
+    refreshIntervalId = setInterval(function () {
+      listMessages(currentRoomId);
+    }, 3000000000000);
+  }
+
+  if (roomId) {
+    try {
+      const messages = await webex.messages.list({ roomId: roomId, max: 2 });
+      chatContainer.innerHTML = "";
+
+      const reversedMessages = messages.items.reverse();
+
+      let currentDate = null;
+      let hoveredMessageId = null;
+
+      for (let i = 0; i < reversedMessages.length; i++) {
+        const message = reversedMessages[i];
+        const senderName = await getSenderName(message.personId);
+        const messageDate = new Date(message.created);
+        const formattedDate = formatDate(messageDate);
+        const formattedTime = formatTime(messageDate);
+
+        if (!currentDate || currentDate.toDateString() !== messageDate.toDateString()) {
+          chatContainer.innerHTML += `<p class="chat-header">${formattedDate}</p>`;
+          currentDate = messageDate;
+        }
+
+        const messageText = `${senderName}: ${message.text} <span class="time">${formattedTime}</span>`;
+
+        const messageContainer = document.createElement("div");
+        messageContainer.className = "message-container";
+        messageContainer.setAttribute("data-message-id", message.id);
+
+        const deleteIcon = document.createElement("span");
+        deleteIcon.className = "delete-icon delete-message-icon";
+        deleteIcon.innerHTML = "🗑️";
+        deleteIcon.onclick = function (event) {
+          event.stopPropagation();
+          deleteMessage(message.id);
+        };
+
+        deleteIcon.style.marginTop = "-0.9cm";
+        deleteIcon.style.zIndex = "1";
+
+        messageContainer.addEventListener("mouseover", (function (currentMessageId) {
+          return function () {
+            hoveredMessageId = currentMessageId;
+            deleteIcon.style.visibility = "visible";
+            messageContainer.style.backgroundColor = "LightSkyBlue";
+          };
+        })(message.id));
+
+        messageContainer.addEventListener("mouseout", function () {
+          hoveredMessageId = null;
+          deleteIcon.style.visibility = "hidden";
+          messageContainer.style.backgroundColor = "";
+        });
+
+        if (i === 0) {
+          const meetingButton = document.createElement("button");
+          meetingButton.className = "meeting-button";
+          meetingButton.innerHTML = '<span style="font-weight: normal; white-space: nowrap;">📞 Schedule Meeting</span>';
+          meetingButton.style.position = "fixed";
+          meetingButton.style.top = "0.6cm";
+          meetingButton.style.left = "37cm";
+          meetingButton.style.fontSize = "16px";
+
+          meetingButton.onclick = function () {
+            startMeeting(currentRoomId, webex);
+          };
+
+          document.body.appendChild(meetingButton);
+
+          const shareButton = document.createElement("button");
+          shareButton.className = "share-button";
+          shareButton.innerHTML = '<span style="font-weight: normal; white-space: nowrap;">📤 Share</span>';
+          shareButton.style.position = "fixed";
+          shareButton.style.top = "0.6cm";
+          shareButton.style.left = "8.5cm";
+          shareButton.style.fontSize = "16px";
+          shareButton.style.width = "2cm";
+
+          shareButton.onclick = async function () {
+            await storeMessagesInDB(reversedMessages);
+            shareChat();
+          };
+
+          document.body.appendChild(shareButton);
+        }
+
+        messageContainer.innerHTML += `<p class="chat-message">${messageText}</p>`;
+        messageContainer.appendChild(deleteIcon);
+        messageContainer.onclick = function () {
+          console.log(`Message clicked: ${message.id}`);
+        };
+
+        chatContainer.appendChild(messageContainer);
+      }
+
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  }
+}
+
+function shareChat() {
+  const chatMessages = document.querySelectorAll('.chat-message');
+
+  const chatText = Array.from(chatMessages).map(messageElement => messageElement.innerText).join('\n');
+
+  const tempElement = document.createElement('textarea');
+  tempElement.value = chatText;
+
+  document.body.appendChild(tempElement);
+
+  tempElement.select();
+  document.execCommand('copy');
+
+  document.body.removeChild(tempElement);
+
+  console.log('Chat has been copied to the clipboard.');
+}
+
+async function storeMessagesInDB(messages) {
+  try {
+    // Declare 'connection' variable if not already declared in the same scope
+;
+    const connection = mysql.createConnection({
+      host: 'localhost',
+      port: 8080,
+      user: 'root',
+      password: '', // replace with your MySQL password
+      database: 'webex1'
+    });
+
+    for (const message of messages) {
+      const senderName = await getSenderName(message.personId);
+      const query = 'INSERT INTO messages (id, roomId, personId, text, created) VALUES (?, ?, ?, ?, ?)';
+      const values = [message.id, currentRoomId, message.personId, message.text, new Date(message.created)];
+
+      connection.query(query, values, (error, results, fields) => {
+        if (error) {
+          console.error('Error storing message:', error);
+        } else {
+          console.log('Message stored successfully');
+        }
+      });
+    }
+
+    // Ensure to close the connection after processing
+    connection.end();
+
+  } catch (error) {
+    console.error('Error storing message:', error);
+  }
+}
+
+connection.end();
+
+async function displayRoomName(roomId) {
+  try {
+    const roomDetails = await webex.rooms.get(roomId);
+    const roomName = roomDetails.title;
+
+    const roomNameContainer = document.querySelector('.room-name');
+    if (roomNameContainer) {
+      roomNameContainer.innerHTML = roomName;
+      roomNameContainer.style.color = 'white'; // Set text color to white
+      roomNameContainer.style.position = 'fixed';
+      roomNameContainer.style.top = '0.5cm';
+      roomNameContainer.style.left = '7cm';
+    }
+  } catch (error) {
+    console.error('Error fetching room details:', error);
+  }
+}
+
+async function startVideoCall(roomId) {
+  if (!webex?.meetings) {
+    console.error('Webex meetings object is undefined');
+    return;
+  }
+
+  const selfView = document.createElement('video');
+  selfView.id = 'selfView';
+  selfView.autoplay = true;
+  selfView.playsinline = true;
+
+  const remoteViewVideo = document.createElement('video');
+  remoteViewVideo.id = 'remoteViewVideo';
+  remoteViewVideo.autoplay = true;
+  remoteViewVideo.playsinline = true;
+
+  const remoteViewAudio = document.createElement('audio');
+  remoteViewAudio.id = 'remoteViewAudio';
+  remoteViewAudio.autoplay = true;
+
+  const spinner = document.createElement('div');
+  spinner.id = 'spinner';
+  spinner.innerText = 'Loading...';
+
+  try {
+    document.body.appendChild(selfView);
+    document.body.appendChild(remoteViewVideo);
+    document.body.appendChild(remoteViewAudio);
+    document.body.appendChild(spinner);
+
+    const destination = roomId;
+    spinner.style.display = 'block';
+
+    const meeting = await webex.meetings.create(destination);
+
+    meeting.on('media:ready', (media) => {
+      spinner.style.display = 'none';
+
+      if (!media) {
+        return;
+      }
+
+      if (media.type === 'local') {
+        selfView.srcObject = media.stream;
+      }
+
+      if (media.type === 'remoteVideo') {
+        remoteViewVideo.srcObject = media.stream;
+      }
+
+      if (media.type === 'remoteAudio') {
+        remoteViewAudio.srcObject = media.stream;
+      }
+    });
+
+    meeting.on('media:stopped', (media) => {
+      if (media.type === 'local') {
+        selfView.srcObject = null;
+      }
+
+      if (media.type === 'remoteVideo') {
+        remoteViewVideo.srcObject = null;
+      }
+
+      if (media.type === 'remoteAudio') {
+        remoteViewAudio.srcObject = null;
+      }
+    });
+
+    const mediaSettings = {
+      receiveVideo: true,
+      receiveAudio: true,
+      receiveShare: false,
+      sendVideo: true,
+      sendAudio: true,
+      sendShare: false,
+    };
+
+    await meeting.join();
+
+    const [localStream, localShare] = await meeting.getMediaStreams(mediaSettings);
+
+    await meeting.addMedia({
+      localShare,
+      localStream,
+      mediaSettings,
+    });
+
+  } catch (error) {
+    console.error('Error starting video call:', error.message);
+  }
+}
+webex.messages
+    .create({
+      text: messageText,
+      roomId: newRoomId,
+    })
+    .then(function (message) {
+      const formattedDate = formatDate(new Date(message.created));
+      const formattedTime = formatTime(new Date(message.created));
+      const senderName = "You"; // Assuming the sender is the current user
+
+      const messageText = `${senderName}: ${message.text} <span class="time">${formattedTime}</span>`;
+      const newMessageHTML = `<p class="chat-message">${messageText}</p>`;
+
+      // Get the existing messages
+      const existingMessages = chatContainer.querySelectorAll('.chat-message');
+
+      // Insert the new message at the bottom of the chat container
+      chatContainer.insertAdjacentHTML('beforeend', newMessageHTML);
+
+      // Move the send input field and button to the bottom
+      const inputField = document.getElementById('message-input');
+      if (inputField) {
+        chatContainer.appendChild(inputField);
+      }
+
+      const sendButton = document.getElementById('send-button');
+      if (sendButton) {
+        chatContainer.appendChild(sendButton);
+      }
+
+      // Clear the input field
+      if (inputField) {
+        inputField.value = '';
+      }
+    })
+    .catch(function (error) {
+      log(`Error sending message: ${error}`);
+    });
+
+    async function getSenderName(personId) {
+      try {
+        const person = await webex.people.get(personId);
+        return person.displayName || person.emails[0] || "Unknown";
+      } catch (error) {
+        console.error("Error fetching person info:", error);
+        return "Unknown";
+      }
+    }
+
+
+  
+
+function formatDate(date) {
+  const options = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
+  const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+  const formattedDate = `${dayOfWeek} - ${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  return formattedDate;
+}
+function deleteMessage(messageId) {
+  const confirmation = window.confirm("Are you sure you want to delete this message?");
+
+  if (confirmation) {
+    const deletedMessageContainer = document.querySelector(`[data-message-id="${messageId}"]`);
+
+    webex.messages.remove(messageId)
+      .then(function () {
+        console.log("Message deleted successfully.");
+
+        // Optionally, you can remove the deleted message container from the DOM
+        if (deletedMessageContainer) {
+          deletedMessageContainer.remove();
+        }
+      })
+      .catch(function (error) {
+        console.error("Error deleting message:", error);
+      });
+  }
+}
+
+
+async function load() {
+  if (!newRoomId) {
+    console.error("Please select a room before loading messages.");
+    return;
+  }
+
+  try {
+    const messages = await webex.messages.list({ roomId: newRoomId, max: 1 });
+    const reversedMessages = messages.items.reverse();
+
+    if (reversedMessages.length > 0) {
+      lastLoadedMessageTimestamp = reversedMessages[0].created;
+      const newMessage = reversedMessages[0];
+      const formattedMessage = await formatMessage(newMessage);
+
+      // Append the new message to the bottom of the chat container
+      chatContainer.insertAdjacentHTML('beforeend', formattedMessage);
+
+      // Scroll to the bottom of the chat container to show the latest message
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  } catch (error) {
+    console.error("Error loading messages:", error);
+  }
+}
+
+// Event listener for the "g" key press
+document.addEventListener('keydown', function (event) {
+  if (event.key === 'g') {
+    load();
+  }
+});
+function deleteRoom(roomId) {
+  if (confirm("Are you sure you want to delete this room?")) {
+    // Assuming webex is a valid Webex instance
+    webex.rooms
+      .remove(roomId)
+      .then(function () {
+        console.log("Room deleted successfully");
+        // Optionally, you may want to refresh the room list after deletion
+        listRooms();
+      })
+      .catch(function (error) {
+        console.error("Error deleting room:", error);
+      });
+  }
+}
+
+ 
+  listRooms();
+
+    function formatTime(date) {
+  let hours = date.getHours();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12; // Convert to 12-hour format
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${hours}:${minutes} ${ampm}`;
+}
+
+// Example usage:
+const now = new Date();
+console.log(formatTime(now));
+
+// Inside the loop where you create room containers
+roomContainer.addEventListener("mouseenter", function () {
+  roomContainer.classList.add("highlighted");
+});
+
+roomContainer.addEventListener("mouseleave", function () {
+  roomContainer.classList.remove("highlighted");
+});
+// Inside the loop where you create message containers
+messageContainer.addEventListener("mouseenter", function () {
+  messageContainer.classList.add("highlighted");
+});
+
+messageContainer.addEventListener("mouseleave", function () {
+  messageContainer.classList.remove("highlighted");
+});
+
+const emojiPicker = new EmojiPicker();
+document.body.appendChild(emojiPicker);
+
+emojiPicker.addEventListener("emoji-click", function (event) {
+  const emoji = event.detail.emoji;
+  const inputField = document.getElementById("message-input");
+  inputField.value += emoji;
+});
+
+</script>
+</body>
+
+</html>
+
